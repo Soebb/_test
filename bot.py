@@ -41,7 +41,7 @@ async def start(bot, update):
 async def from_yturl_or_local_file(_, m):
     name = dir = str(m.chat.id)
     msg = await m.reply("Processing..")
-    transcribe(m.text, output_dir=name, fp16=False)
+    transcribe(m.text, output_dir=name)
     shutil.make_archive(name, 'zip', base_dir=dir)
     await m.reply_document(name+'.zip')
     await msg.delete()
@@ -54,7 +54,7 @@ async def from_tg_files(_, m):
     media = await m.download()
     await msg.edit_text("Processing..")
     name = dir = str(m.chat.id)
-    transcribe(media, output_dir=name, fp16=False)
+    transcribe(media, output_dir=name)
     shutil.make_archive(name, 'zip', base_dir=dir)
     await m.reply_document(name+'.zip')
     await msg.delete()
