@@ -1,4 +1,4 @@
 pyrogram
 tgcrypto
-transcribe-anything
+https://github.com/Soebb/transcribe-anything/archive/main.zip
 python-dotenv
