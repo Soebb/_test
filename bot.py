@@ -1,4 +1,4 @@
-import os
+import os, shutil
 from dotenv import load_dotenv
 from transcribe_anything.api import transcribe
 from pyrogram import Client, filters
@@ -39,20 +39,27 @@ async def start(bot, update):
 
 @Bot.on_message(filters.private & filters.text)
 async def from_yturl_or_local_file(_, m):
-    output_name = f"transcript{m.message_id}.zip"
-    await m.reply("Processing..")
-    transcribe(m.text, output_dir=output_name)
-    await m.reply_document(output_name)
-
+    name = dir = str(m.chat.id)
+    msg = await m.reply("Processing..")
+    transcribe(m.text, output_dir=name)
+    shutil.make_archive(name, 'zip', base_dir=dir)
+    await m.reply_document(name+'.zip')
+    await msg.delete()
+    shutil.rmtree(dir)
+    os.remove(name+'.zip')
 
 @Bot.on_message(filters.private & filters.media)
 async def from_tg_files(_, m):
     msg = await m.reply("Downloading..")
     media = await m.download()
     await msg.edit_text("Processing..")
-    output_name = os.path.basename(media).rsplit('.', 1)[0] + ".zip"
-    transcribe(media, output_dir=output_name)
-    await m.reply_document(output_name)
+    name = dir = str(m.chat.id)
+    transcribe(media, output_dir=name)
+    shutil.make_archive(name, 'zip', base_dir=dir)
+    await m.reply_document(name+'.zip')
+    await msg.delete()
+    shutil.rmtree(dir)
+    os.remove(name+'.zip')
     os.remove(media)
 
 
