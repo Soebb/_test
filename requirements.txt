@@ -1,3 +1,4 @@
 pyrogram
 tgcrypto
 transcribe-anything
+python-dotenv
