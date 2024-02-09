@@ -14,7 +14,7 @@ Bot = Client(
 )
 
 subs_ai = SubsAI()
-model = subs_ai.create_model('openai/whisper', {'model_type': 'base'})
+model = subs_ai.create_model('guillaumekln/faster-whisper', {'model_type': 'base'})
 
 START_TXT = """
 Hi {}, I'm Persian transcriber Bot.
