@@ -1,4 +1,4 @@
-import os, shutil
+import os
 from dotenv import load_dotenv
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -17,14 +17,14 @@ subs_ai = SubsAI()
 model = subs_ai.create_model('guillaumekln/faster-whisper', {'model_type': 'base'})
 
 START_TXT = """
-Hi {}, I'm Persian transcriber Bot.
+Hi {}, I'm whisper Bot.
 
-Send a media(video/audio) or a YouTube URL or path of a local file in your system.
+Send a video to transcribe and generate srt.
 """
 
 START_BTN = InlineKeyboardMarkup(
         [[
-        InlineKeyboardButton('Source Code', url='https://github.com/soebb/persian-transcriber-bot'),
+        InlineKeyboardButton('Source Code', url='https://github.com/soebb/whisper-bot'),
         ]]
     )
 
@@ -40,8 +40,10 @@ async def start(bot, update):
     )
 
 
-@Bot.on_message(filters.private & filters.media)
+@Bot.on_message(filters.private & (filters.video | filters.document))
 async def from_tg_files(_, m):
+    if m.document and not m.document.mime_type.startswith("video/"):
+        return
     msg = await m.reply("Downloading..")
     media = await m.download()
     await msg.edit_text("Processing..")
